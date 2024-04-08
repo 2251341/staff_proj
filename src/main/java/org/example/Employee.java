@@ -1,30 +1,15 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-
 public class Employee {
     private String name;
+    private String position;
+    private String id;
     private String password;
-    private String role; // "employee" or "admin"
 
-    public Employee(String name, String password, String role) {
+    public Employee(String name, String position, String id, String password) {
         this.name = name;
+        this.position = position;
+        this.id = id;
         this.password = password;
-        this.role = role;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getRole() {
-        return role;
     }
 }
-
