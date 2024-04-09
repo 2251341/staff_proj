@@ -5,10 +5,12 @@ import java.util.Date;
 public class AttendanceRecord {
     private Date dateTime;
     private boolean isAttendanceIn;
+    private String employeeId; // 직원 ID 추가
 
-    public AttendanceRecord(Date dateTime, boolean isAttendanceIn) {
+    public AttendanceRecord(Date dateTime, boolean isAttendanceIn, String employeeId) {
         this.dateTime = dateTime;
         this.isAttendanceIn = isAttendanceIn;
+        this.employeeId = employeeId;
     }
 
     public Date getDateTime() {
@@ -27,5 +29,9 @@ public class AttendanceRecord {
 
     public Date getDate() {
         return dateTime;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
     }
 }

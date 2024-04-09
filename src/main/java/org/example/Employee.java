@@ -5,15 +5,15 @@ import java.util.ArrayList;
 public class Employee {
     private String name;
     private String position;
-    private String id;
-    private String password;
+    private static String id; // 인스턴스 변수로 변경
+    private static String password; // 인스턴스 변수로 변경
     private ArrayList<AttendanceRecord> attendanceRecords;
 
-    public Employee(String name, String position, String id, String password) {
+    public Employee(String name, String position, Member member) {
         this.name = name;
         this.position = position;
-        this.id = id;
-        this.password = password;
+        id = member.loginId; // Member 클래스의 아이디 정보 사용
+        password = member.loginPw; // Member 클래스의 비밀번호 정보 사용
         this.attendanceRecords = new ArrayList<>();
     }
 
@@ -25,15 +25,15 @@ public class Employee {
         return position;
     }
 
-    public String getId() {
+    public static String getId() {
         return id;
     }
 
-    public Object getPassword() {
+    public static String getPassword() {
         return password;
     }
 
-    public void viewAttendanceRecords(AttendanceRecord[] attendanceRecords) {
+    public void viewAttendanceRecords() {
         System.out.println(name + "님의 출퇴근 기록:");
         for (AttendanceRecord record : attendanceRecords) {
             System.out.println(record);
