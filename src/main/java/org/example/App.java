@@ -1,8 +1,5 @@
 package org.example;
 
-import org.example.Admin;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
@@ -13,7 +10,8 @@ public class App {
         while (true) {
             showMenu();
             int choice = getUserChoice();
-            handleUserChoice(choice);
+            AttendanceRecord[] attendanceRecords = new AttendanceRecord[0];
+            handleUserChoice(choice, attendanceRecords);
         }
     }
 
@@ -29,13 +27,13 @@ public class App {
         return scanner.nextInt();
     }
 
-    private static void handleUserChoice(int choice) {
+    private static void handleUserChoice(int choice, AttendanceRecord[] attendanceRecords) {
         switch (choice) {
             case 1:
-                adminMode();
+                adminMode(attendanceRecords);
                 break;
             case 2:
-                employeeMode();
+                employeeMode(attendanceRecords);
                 break;
             case 3:
                 System.out.println("프로그램을 종료합니다.");
@@ -45,20 +43,20 @@ public class App {
         }
     }
 
-    private static void adminMode() {
+    private static void adminMode(AttendanceRecord[] attendanceRecords) {
         System.out.print("관리자 아이디를 입력하세요: ");
         String adminId = scanner.next();
         System.out.print("비밀번호를 입력하세요: ");
         String adminPassword = scanner.next();
 
         if (admin.isAdmin(adminId, adminPassword)) {
-            adminMenu();
+            adminMenu(attendanceRecords);
         } else {
             System.out.println("잘못된 관리자 정보입니다.");
         }
     }
 
-    private static void adminMenu() {
+    private static void adminMenu(AttendanceRecord[] attendanceRecords) {
         while (true) {
             System.out.println("\n====== 관리자 모드 ======");
             System.out.println("1. 직원 추가");
@@ -74,7 +72,7 @@ public class App {
                     admin.showEmployeeList();
                     break;
                 case 3:
-                    admin.viewAttendanceRecords();
+                    admin.viewAttendanceRecords(attendanceRecords);
                     break;
                 case 4:
                     return;
@@ -84,7 +82,17 @@ public class App {
         }
     }
 
-    private static void employeeMode() {
-        // 직원 모드 구현
+    private static void employeeMode(AttendanceRecord[] attendanceRecords) {
+        System.out.print("직원 ID를 입력하세요: ");
+        String employeeId = scanner.next();
+        System.out.print("비밀번호를 입력하세요: ");
+        String password = scanner.next();
+
+        Employee employee = admin.findEmployee(employeeId);
+        if (employee != null && employee.getPassword().equals(password)) {
+            employee.viewAttendanceRecords(attendanceRecords);
+        } else {
+            System.out.println("로그인 실패: 잘못된 ID 또는 비밀번호입니다.");
+        }
     }
 }

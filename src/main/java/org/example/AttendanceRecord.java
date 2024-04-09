@@ -24,4 +24,8 @@ public class AttendanceRecord {
         String action = isAttendanceIn ? "출근" : "퇴근";
         return "[" + dateTime + "] " + action;
     }
+
+    public Date getDate() {
+        return dateTime;
+    }
 }

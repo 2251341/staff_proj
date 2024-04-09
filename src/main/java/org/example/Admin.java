@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.Employee;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +59,7 @@ public class Admin {
         }
     }
 
-    public void viewAttendanceRecords() {
+    public void viewAttendanceRecords(AttendanceRecord[] attendanceRecords) {
         Scanner scanner = new Scanner(System.in);
 
         // 직원별 조회, 날짜별 조회, 기간별 조회 중 선택
@@ -77,10 +75,10 @@ public class Admin {
                 viewAttendanceRecordsByEmployee();
                 break;
             case 2:
-                viewAttendanceRecordsByDate();
+                viewAttendanceRecordsByDate(attendanceRecords);
                 break;
             case 3:
-                viewAttendanceRecordsByPeriod();
+                viewAttendanceRecordsByPeriod(attendanceRecords);
                 break;
             default:
                 System.out.println("잘못된 선택입니다.");
@@ -105,7 +103,7 @@ public class Admin {
         System.out.println("해당 ID의 직원을 찾을 수 없습니다.");
     }
 
-    private void viewAttendanceRecordsByDate() {
+    private void viewAttendanceRecordsByDate(AttendanceRecord[] attendanceRecords) {
         System.out.print("조회할 날짜를 입력하세요 (YYYY-MM-DD): ");
         Scanner scanner = new Scanner(System.in);
         String dateString = scanner.nextLine();
@@ -124,7 +122,7 @@ public class Admin {
         }
     }
 
-    private void viewAttendanceRecordsByPeriod() {
+    private void viewAttendanceRecordsByPeriod(AttendanceRecord[] attendanceRecords) {
         System.out.print("조회할 시작 날짜를 입력하세요 (YYYY-MM-DD): ");
         Scanner scanner = new Scanner(System.in);
         String startDateString = scanner.nextLine();
@@ -152,5 +150,14 @@ public class Admin {
     public boolean isAdmin(String adminId, String adminPassword) {
         // 관리자 여부 확인하는 로직
         return adminId.equals("admin") && adminPassword.equals("adminpassword");
+    }
+
+    public Employee findEmployee(String employeeId) {
+        for (Employee employee : employeeList) {
+            if (employee.getId().equals(employeeId)) {
+                return employee;
+            }
+        }
+        return null; // 해당 ID를 가진 직원이 없는 경우
     }
 }
