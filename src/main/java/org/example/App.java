@@ -1,76 +1,103 @@
-package org.example;// 패키지 org.example
+package org.example;
 
 import org.example.container.Container;
-import java.util.ArrayList;
+import org.example.controller.MemberController;
 
+import java.util.Scanner;
 
 public class App {
-    public static Admin admin;
-    public static ArrayList<AttendanceRecord> attendanceRecords = new ArrayList<>();
+    private MemberController memberController;
 
-    public static void main(String[] args) {
-        admin = new Admin();
-        admin.makeTestData();
-
+    public App(MemberController memberController) {
+        this.memberController = memberController;
+    }
+    public void start() {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
-            showMenu();
-            int choice = getUserChoice();
-            handleUserChoice(choice);
+            System.out.println("1. 직원 관리");
+            System.out.println("2. 출퇴근 기록 조회");
+            System.out.println("3. 로그아웃");
+            System.out.println("4. 종료");
+            System.out.print("메뉴를 선택하세요: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // 개행문자 제거
+
+            switch (choice) {
+                case 1:
+                    memberController.manageEmployees();
+                    break;
+                case 2:
+                    memberController.viewAttendance();
+                    break;
+                case 3:
+                    memberController.doAction("member", "logout");
+                    break;
+                case 4:
+                    System.out.println("프로그램을 종료합니다.");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("잘못된 선택입니다. 다시 선택해주세요.");
+            }
+        }
+    }
+    private boolean isAdmin() {
+        return Container.getSession().getLoginedMember().getLoginId().equals("admin");
+    }
+
+    public void manageEmployees() {
+        if (isAdmin()) {
+            System.out.println("직원 관리 기능을 실행합니다.");
+            System.out.println("1. 새 직원 등록");
+            System.out.println("2. 직원 정보 수정");
+            System.out.println("3. 직원 삭제");
+            System.out.println("4. 뒤로 가기");
+            System.out.print("메뉴를 선택하세요: ");
+            int choice = Container.getScanner().nextInt();
+            Container.getScanner().nextLine(); // 개행 문자 제거
+
+            switch (choice) {
+                case 1:
+                    memberController.doAction("member", "join");
+                    break;
+                case 2:
+                    // 직원 정보 수정 기능 호출
+                    break;
+                case 3:
+                    // 직원 삭제 기능 호출
+                    break;
+                case 4:
+                    System.out.println("뒤로 가기");
+                    break;
+                default:
+                    System.out.println("잘못된 선택입니다.");
+            }
+        } else {
+            System.out.println("권한이 없습니다.");
         }
     }
 
-    private static void showMenu() {
-        System.out.println("\n====== 직원 관리 프로그램 ======");
-        System.out.println("1. 관리자 모드");
-        System.out.println("2. 직원 모드");
-        System.out.println("3. 종료");
-    }
+    public void viewAttendance() {
+        System.out.println("출퇴근 기록 조회 기능을 실행합니다.");
+        System.out.println("1. 날짜별 조회");
+        System.out.println("2. 기간별 조회");
+        System.out.println("3. 뒤로 가기");
+        System.out.print("원하는 조회 방법을 선택하세요: ");
+        int choice = Container.getScanner().nextInt();
+        Container.getScanner().nextLine(); // 개행 문자 제거
 
-    static int getUserChoice() {
-        System.out.print("메뉴를 선택하세요: ");
-        return Container.getScanner().nextInt();
-    }
-
-    public static void handleUserChoice(int choice) {
         switch (choice) {
             case 1:
-                adminMode();
+                // 날짜별 출퇴근 기록 조회 기능 호출
                 break;
             case 2:
-                employeeMode();
+                // 기간별 출퇴근 기록 조회 기능 호출
                 break;
             case 3:
-                System.out.println("프로그램을 종료합니다.");
-                System.exit(0);
+                System.out.println("뒤로 가기");
+                break;
             default:
                 System.out.println("잘못된 선택입니다.");
-        }
-    }
-
-    public static void adminMode() {
-        System.out.print("관리자 아이디를 입력하세요: ");
-        String loginId = Container.getScanner().next();
-        System.out.print("비밀번호를 입력하세요: ");
-        String loginPw = Container.getScanner().next();
-
-        if (admin.isAdmin(loginId, loginPw)) {
-            admin.adminMenu(attendanceRecords.toArray(new AttendanceRecord[0]));
-        } else {
-            System.out.println("잘못된 관리자 정보입니다.");
-        }
-    }
-
-    public static void employeeMode() {
-        System.out.print("직원 ID를 입력하세요: ");
-        String employeeId = Container.getScanner().next();
-        System.out.print("비밀번호를 입력하세요: ");
-        String password = Container.getScanner().next();
-
-        Employee employee = admin.findEmployee(employeeId);
-        if (employee != null && Employee.getPassword().equals(password)) {
-            employee.viewAttendanceRecords();
-        } else {
-            System.out.println("로그인 실패: 잘못된 ID 또는 비밀번호입니다.");
         }
     }
 }
