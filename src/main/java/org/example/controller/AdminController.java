@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import org.example.Employee;
 import org.example.EmployeeManagement;
 import org.example.Main;
 
@@ -44,35 +43,35 @@ public class AdminController {
         boolean logout = false;
         do {
             System.out.println("관리자 페이지에 오신 것을 환영합니다, " + username + "님!");
-            int choice;
-            do {
-                System.out.println("1. 직원 관리");
-                System.out.println("2. 출퇴근 기록 조회");
-                System.out.println("3. 로그아웃");
-                System.out.print("선택: ");
-                choice = scanner.nextInt();
-                scanner.nextLine(); // 엔터키 소비
+            System.out.println("1. 직원 관리");
+            System.out.println("2. 출퇴근 기록 조회");
+            System.out.println("3. 출퇴근 기록하기"); // 출퇴근 기록 옵션 추가
+            System.out.println("4. 로그아웃");
+            System.out.print("선택: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // 엔터키 소비
 
-                switch (choice) {
-                    case 1:
-                        manageEmployees(); // 직원 관리 기능 호출
-                        break;
-                    case 2:
-                        viewAttendanceRecords(EmployeeManagement.attendanceRecords); // 출퇴근 기록 조회 기능 호출
-                        break;
-                    case 3:
-                        System.out.println("로그아웃합니다.");
-                        logout = true; // 로그아웃 플래그를 true로 설정
-                        break;
-                    default:
-                        System.out.println("잘못된 선택입니다. 다시 선택하세요.");
-                }
-            } while (!logout); // 로그아웃이 true가 될 때까지 페이지 표시를 반복
-
-        } while (!logout); // 로그아웃이 true가 될 때까지 페이지 표시를 반복
-
-        // 로그아웃이 true가 되면 로그인 페이지로 돌아갑니다.
+            switch (choice) {
+                case 1:
+                    manageEmployees();
+                    break;
+                case 2:
+                    viewAttendanceRecords(EmployeeManagement.attendanceRecords); // 가정: 이 메서드가 존재한다
+                    break;
+                case 3:
+                    recordEmployeeAttendance(); // 출퇴근 기록 메서드 호출
+                    break;
+                case 4:
+                    System.out.println("로그아웃합니다.");
+                    logout = true; // 로그아웃을 true로 설정하여 반복문 종료
+                    break;
+                default:
+                    System.out.println("잘못된 선택입니다. 다시 선택하세요.");
+            }
+        } while (!logout);
         Main.showLoginPage();
+
+        // 메서드 종료로 호출 메서드로 돌아갑니다
     }
 
     private static void manageEmployees() {
@@ -113,15 +112,21 @@ public class AdminController {
 
     private static void addEmployee() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("추가할 직원의 ID를 입력하세요: ");
+        System.out.print("추가할 직원의 ID를 입력하세요: "); // 사용자로부터 직원 ID 입력 받기
         String id = scanner.nextLine();
-        System.out.print("추가할 직원의 비밀번호를 입력하세요: ");
+        System.out.print("추가할 직원의 비밀번호를 입력하세요: "); // 사용자로부터 직원 비밀번호 입력 받기
         String password = scanner.nextLine();
+        System.out.print("추가할 직원의 이름을 입력하세요: "); // 사용자로부터 직원 이름 입력 받기
+        String name = scanner.nextLine();
+        System.out.print("추가할 직원의 부서를 입력하세요: "); // 사용자로부터 직원 부서 입력 받기
+        String department = scanner.nextLine();
+        System.out.print("추가할 직원의 직급을 입력하세요: "); // 사용자로부터 직원 직급 입력 받기
+        String position = scanner.nextLine();
 
-        // EmployeeManagement 클래스의 직원 등록 메서드를 호출하여 새 직원을 추가합니다.
-        EmployeeManagement.registerEmployee(id, password);
+        // EmployeeManagement의 registerEmployee 메서드를 모든 필요한 정보와 함께 호출합니다.
+        EmployeeManagement.registerEmployee(id, password, name, department, position);
 
-        System.out.println("직원이 추가되었습니다.");
+        System.out.println("직원이 추가되었습니다."); // 직원 등록 완료 메시지 출력
     }
 
     private static void removeEmployee() {
@@ -154,6 +159,14 @@ public class AdminController {
         for (String employee : employeeList) {
             System.out.println(employee);
         }
+    }
+    private static void recordEmployeeAttendance() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("출퇴근 기록할 직원의 ID를 입력하세요: ");
+        String id = scanner.nextLine();
+
+        // 출퇴근 기록 메서드 호출
+        EmployeeManagement.recordAttendance(id);
     }
 
     private static void viewAttendanceRecords(Map<String, String> attendanceRecords) {

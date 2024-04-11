@@ -35,8 +35,8 @@ public class Main {
                     AdminController.showPage(id);
                 }
                 // Employee login
-                else if (EmployeeController.login(id, password)) {
-                    loginSuccess = true;
+                else if (EmployeeManagement.validateEmployeeCredentials(id, password)) {
+                    // 로그인 성공 시, 직원 페이지 표시
                     System.out.println("직원 로그인 성공!");
                     EmployeeController.showPage(id);
                 } else {

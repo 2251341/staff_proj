@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.Employee;
 import org.example.EmployeeManagement;
+import org.example.Main;
 
 import java.util.List;
 import java.util.Scanner;
@@ -10,18 +11,22 @@ public class EmployeeController {
     private static final String EMPLOYEE_LOGIN_MESSAGE = "직원 페이지에 오신 것을 환영합니다, %s님!";
     private static final String NOT_FOUND_MESSAGE = "해당 기록이 없습니다.";
 
-
+    public static void logout() {
+        // 로그아웃 처리 로직을 여기에 구현합니다.
+        // 실제 애플리케이션에서는 사용자의 세션을 종료하거나 쿠키를 제거하는 등의 작업이 필요할 수 있습니다.
+        System.out.println("로그아웃 되었습니다.");
+        Main.showLoginPage(); // 메인 로그인 페이지로 돌아가는 메서드 호출
+    }
 
     public static void showPage(String username) {
-        System.out.println(String.format(EMPLOYEE_LOGIN_MESSAGE, username));
-
         Scanner scanner = new Scanner(System.in);
         int choice;
         do {
+            System.out.println(String.format(EMPLOYEE_LOGIN_MESSAGE, username));
             System.out.println("1. 내 정보 조회");
             System.out.println("2. 기간별 출퇴근 기록 조회");
             System.out.println("3. 날짜별 출퇴근 기록 조회");
-            System.out.println("4. 뒤로 가기");
+            System.out.println("4. 로그아웃"); // 로그아웃 옵션 추가
             System.out.print("선택: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // 엔터키 소비
@@ -37,8 +42,8 @@ public class EmployeeController {
                     viewOwnAttendanceByDate(username);
                     break;
                 case 4:
-                    System.out.println("이전 메뉴로 돌아갑니다.");
-                    return;
+                    logout(); // 로그아웃 메서드 호출
+                    return; // 메서드 종료 및 로그인 페이지로 돌아가기
                 default:
                     System.out.println("잘못된 선택입니다. 다시 선택하세요.");
             }
