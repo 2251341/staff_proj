@@ -11,6 +11,8 @@ public class Employee {
     private String department;
     private String position;
     private List<String> attendanceRecords; // 출퇴근 기록 저장
+    private List<String> checkInRecords; // Separate list for check-in records
+    private List<String> checkOutRecords; // Separate list for check-out records
 
     public Employee(String id, String password, String name, String department, String position) {
         this.id = id;
@@ -19,6 +21,8 @@ public class Employee {
         this.department = department;
         this.position = position;
         this.attendanceRecords = new ArrayList<>();
+        this.checkInRecords = new ArrayList<>();
+        this.checkOutRecords = new ArrayList<>();
     }
 
     // 직원 이름 반환
@@ -41,6 +45,14 @@ public class Employee {
     // 출퇴근 기록 조회 메서드
     public List<String> getAttendanceRecords() {
         return attendanceRecords;
+    }
+
+    public void addCheckInRecord(String formattedDateTime) {
+        attendanceRecords.add("Check-in record - " + formattedDateTime);
+    }
+
+    public void addCheckOutRecord(String formattedDateTime) {
+        attendanceRecords.add("Check-out record - " + formattedDateTime);
     }
 
     // 각 필드의 getter 메서드들 생략

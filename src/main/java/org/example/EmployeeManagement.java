@@ -5,22 +5,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class EmployeeManagement {
-    private static Map<String, Employee> employees = new HashMap<>();
+    public static Map<String, Employee> employees = new HashMap<>();
     private static Map<String, String> employeeCredentials = new HashMap<>();
     public static Map<String, String> attendanceRecords = new HashMap<>();
     private static List<String> employeeList = new ArrayList<>();
 
     // 직원 계정 정보 초기화
     public static void initializeEmployeeCredentials() {
-        employeeCredentials.put("employee1", "password1");
-        employeeCredentials.put("employee2", "password2");
+        employeeCredentials.put("user1", "user1");
+        employeeCredentials.put("user2", "user2");
         // 직원 객체 초기화도 수행
-        employees.put("employee1", new Employee("employee1", "password1", "Employee One", "Department One", "Position One"));
-        employees.put("employee2", new Employee("employee2", "password2", "Employee Two", "Department Two", "Position Two"));
+        employees.put("user1", new Employee("user1", "user1", "홍길동", "인사", "사원"));
+        employees.put("user2", new Employee("user2", "user2", "홍길순", "IT", "대리"));
     }
     public static void addEmployee(Employee employee, String id) {
         employees.put(id, employee);
     }
+
 
 
 
@@ -45,13 +46,25 @@ public class EmployeeManagement {
         }
     }
 
-    public static void recordAttendance(String id) {
+    public static void addCheckInRecord(String id) {
         if (employees.containsKey(id)) {
             LocalDateTime currentTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedDateTime = "Attendance record - " + currentTime.format(formatter);
-            employees.get(id).addAttendanceRecord(formattedDateTime);
-            System.out.println(id + "의 출퇴근이 기록되었습니다.");
+            String formattedDateTime = "Check-in record - " + currentTime.format(formatter);
+            employees.get(id).addCheckInRecord(formattedDateTime);
+            System.out.println(id + "의 출근이 기록되었습니다.");
+        } else {
+            System.out.println("직원을 찾을 수 없습니다.");
+        }
+    }
+
+    public static void addCheckOutRecord(String id) {
+        if (employees.containsKey(id)) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDateTime = "Check-out record - " + currentTime.format(formatter);
+            employees.get(id).addCheckOutRecord(formattedDateTime);
+            System.out.println(id + "의 퇴근이 기록되었습니다.");
         } else {
             System.out.println("직원을 찾을 수 없습니다.");
         }
@@ -81,4 +94,6 @@ public class EmployeeManagement {
             System.out.println("직원 ID가 이미 존재합니다."); // 직원 ID가 이미 존재합니다.
         }
     }
+
+
 }
