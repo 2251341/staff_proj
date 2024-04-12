@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.Employee;
 import org.example.EmployeeManagement;
 import org.example.Main;
 
@@ -72,7 +73,7 @@ public class AdminController {
                         System.out.println("기록할 직원 ID를 입력하세요:");
                         String employeeId = scanner.nextLine();
                         if (EmployeeManagement.validateEmployee(employeeId)) {
-                            System.out.println("출퇴근 유형을 입력하세요 (예: check-in, check-out):");
+                            System.out.println("출퇴근 유형을 입력하세요 (예: 출근, 퇴근):");
                             String attendanceType = scanner.nextLine();
                             recordEmployeeAttendance(employeeId, attendanceType);
                         } else {
@@ -181,19 +182,50 @@ public class AdminController {
         System.out.print("수정할 직원의 ID를 입력하세요: ");
         String id = scanner.nextLine();
 
-        // 직원 정보 수정 코드 추가
+        Employee employee = EmployeeManagement.getEmployee(id);
+        if (employee != null) {
+            System.out.println("현재 직원 정보:");
+            System.out.println("이름: " + employee.getName());
+            System.out.println("부서: " + employee.getDepartment());
+            System.out.println("직급: " + employee.getPosition());
 
-        System.out.println("직원 정보가 수정되었습니다.");
+            System.out.println("수정할 정보를 입력하세요:");
+            System.out.print("이름: ");
+            String name = scanner.nextLine();
+            System.out.print("부서: ");
+            String department = scanner.nextLine();
+            System.out.print("직급: ");
+            String position = scanner.nextLine();
+
+            // Update employee information
+            employee.setName(name);
+            employee.setDepartment(department);
+            employee.setPosition(position);
+
+            System.out.println("직원 정보가 수정되었습니다.");
+
+            // Display updated information
+            System.out.println("수정된 직원 정보:");
+            System.out.println("이름: " + employee.getName());
+            System.out.println("부서: " + employee.getDepartment());
+            System.out.println("직급: " + employee.getPosition());
+        } else {
+            System.out.println("해당 ID의 직원을 찾을 수 없습니다.");
+        }
     }
 
     private static void listEmployees() {
         // EmployeeManagement 클래스의 getEmployeeList() 메서드를 호출하여 직원 목록을 가져옵니다.
-        List<String> employeeList = EmployeeManagement.getEmployeeList();
+        List<Employee> employeeList = EmployeeManagement.getEmployeeList();
 
         // 가져온 직원 목록을 출력합니다.
         System.out.println("직원 목록:");
-        for (String employee : employeeList) {
-            System.out.println(employee);
+        for (Employee employee : employeeList) {
+            System.out.println("ID: " + employee.getId());
+            System.out.println("이름: " + employee.getName());
+            System.out.println("부서: " + employee.getDepartment());
+            System.out.println("직급: " + employee.getPosition());
+            System.out.println("------------------------");
         }
     }
 
@@ -235,7 +267,7 @@ public class AdminController {
         boolean found = false;
         for (String key : EmployeeManagement.attendanceRecords.keySet()) {
             if (key.startsWith(employeeId)) {
-                System.out.println(key.replaceFirst(":", " on ") + " - " + EmployeeManagement.attendanceRecords.get(key));
+                System.out.println(key.replaceFirst(":", " ") + " - " + EmployeeManagement.attendanceRecords.get(key));
                 found = true;
             }
         }

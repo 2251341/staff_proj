@@ -55,5 +55,21 @@ public class Employee {
         attendanceRecords.add("Check-out record - " + formattedDateTime);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     // 각 필드의 getter 메서드들 생략
 }

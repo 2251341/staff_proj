@@ -10,6 +10,7 @@ public class EmployeeManagement {
     public static Map<String, String> attendanceRecords = new HashMap<>();
     private static List<String> employeeList = new ArrayList<>();
 
+
     // 직원 계정 정보 초기화
     public static void initializeEmployeeCredentials() {
         employeeCredentials.put("user1", "user1");
@@ -20,6 +21,8 @@ public class EmployeeManagement {
     }
     public static void addEmployee(Employee employee, String id) {
         employees.put(id, employee);
+        String employeeString = String.format("%s, %s, %s, %s", employee.getId(), employee.getName(), employee.getDepartment(), employee.getPosition());
+        employeeList.add(employeeString);
     }
 
 
@@ -74,8 +77,8 @@ public class EmployeeManagement {
         return attendanceRecords.get(id);
     }
 
-    public static List<String> getEmployeeList() {
-        return new ArrayList<>(employeeList); // employeeList의 복사본을 반환합니다.
+    public static List<Employee> getEmployeeList() {
+        return new ArrayList<>(employees.values());
     }
 
     public static Employee getEmployee(String id) {
