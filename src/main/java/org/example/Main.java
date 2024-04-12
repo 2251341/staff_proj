@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.controller.AdminController;
 import org.example.controller.EmployeeController;
-
+import org.example.dao.EmployeeDao;
 import java.util.Scanner;
 
 public class Main {
@@ -29,13 +29,14 @@ public class Main {
                 String password = scanner.nextLine();
 
                 // Admin login
-                if (AdminController.login(id, password)) {
+                if (AdminController.login(id, password) && AdminController.isAdmin(id)) {
                     loginSuccess = true;
                     System.out.println("관리자 로그인 성공!");
                     AdminController.showPage(id);
                 }
                 // Employee login
                 else if (EmployeeManagement.validateEmployeeCredentials(id, password)) {
+                    loginSuccess = true;
                     // 로그인 성공 시, 직원 페이지 표시
                     System.out.println("직원 로그인 성공!");
                     EmployeeController.showPage(id);

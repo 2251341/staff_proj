@@ -5,14 +5,12 @@ import org.example.Main;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdminController {
     private static String ADMIN_USERNAME = "admin";
     private static String ADMIN_PASSWORD = "admin";
+    private static Set<String> adminUsernames = new HashSet<>();
 
     public static void initializeAdminCredentials() {
         // 기본 관리자 ID와 비밀번호 설정
@@ -21,9 +19,16 @@ public class AdminController {
         // 관리자 정보를 설정합니다.
         AdminController.setAdminCredentials(adminId, adminPassword);
     }
+    public static boolean isAdmin(String username) {
+        return adminUsernames.contains(username);
+    }
 
     private static void setAdminCredentials(String adminId, String adminPassword) {
+        ADMIN_USERNAME = adminId;
+        ADMIN_PASSWORD = adminPassword;
+        adminUsernames.add(adminId); // Adding admin username to the set
     }
+
 
     public static boolean validateUsername(String username) {
         return ADMIN_USERNAME.equals(username) || EmployeeManagement.validateEmployee(username);
