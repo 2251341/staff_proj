@@ -21,37 +21,7 @@ public class EmployeeController {
 
     }
 
-    public void showEmployeePage(String username) {
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        do {
-            System.out.println(String.format(EMPLOYEE_LOGIN_MESSAGE, username));
-            System.out.println("1. 내 정보 조회");
-            System.out.println("2. 기간별 출퇴근 기록 조회");
-            System.out.println("3. 날짜별 출퇴근 기록 조회");
-            System.out.println("4. 로그아웃"); // 로그아웃 옵션 추가
-            System.out.print("선택: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // 엔터키 소비
 
-            switch (choice) {
-                case 1:
-                    viewOwnInfo(username);
-                    break;
-                case 2:
-                    viewOwnAttendanceByPeriod(username);
-                    break;
-                case 3:
-                    viewOwnAttendanceByDate(username);
-                    break;
-                case 4:
-                    logout(); // 로그아웃 메서드 호출
-                    return; // 메서드 종료 및 로그인 페이지로 돌아가기
-                default:
-                    System.out.println("잘못된 선택입니다. 다시 선택하세요.");
-            }
-        } while (true);
-    }
 
     public static void viewOwnInfo(String username) {
         Employee employee = EmployeeService.getEmployee(username);
@@ -60,6 +30,7 @@ public class EmployeeController {
             System.out.println("이름: " + employee.getName());
             System.out.println("부서: " + employee.getDepartment());
             System.out.println("직급: " + employee.getPosition());
+            System.out.println("------------------------");
         } else {
             System.out.println("해당 ID를 가진 직원이 존재하지 않습니다.");
         }
