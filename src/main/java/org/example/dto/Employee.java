@@ -12,7 +12,9 @@ import java.util.List;
 @Getter
 public class Employee {
 
-    private String id;
+    private int id;
+    private String regDate;
+    private String employeeId;
     private String password;
 
     // 직원 이름 반환
@@ -27,8 +29,8 @@ public class Employee {
     private List<String> checkInRecords; // Separate list for check-in records
     private List<String> checkOutRecords; // Separate list for check-out records
 
-    public Employee(String id, String password, String name, String department, String position) {
-        this.id = id;
+    public Employee(String employeeId, String password, String name, String department, String position) {
+        this.employeeId = employeeId;
         this.password = password;
         this.name = name;
         this.department = department;

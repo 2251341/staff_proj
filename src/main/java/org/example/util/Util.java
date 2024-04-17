@@ -2,13 +2,20 @@ package org.example.util;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Util {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static String getNowDateStr() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date now = new Date();
-        return formatter.format(now);
+        return LocalDateTime.now().format(DATE_TIME_FORMATTER);
+    }
+
+    public static LocalDateTime parseDateTime(String dateTimeStr) {
+        return LocalDateTime.parse(dateTimeStr, DATE_TIME_FORMATTER);
+
     }
     // 파일에 내용쓰기
     public static void writeFileContents(String filePath, int data) {

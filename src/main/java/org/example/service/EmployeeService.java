@@ -24,14 +24,14 @@ public class EmployeeService {
         }
     }
 
-    public static boolean validateEmployee(String username) {
-        return employeeDao.findEmployeeById(username) != null;
+    public static boolean validateEmployee(String employeeId) {
+        return employeeDao.findEmployeeById(employeeId) != null;
     }
 
-    public static void registerEmployee(String id, String password, String name, String department, String position) {
-        Employee existingEmployee = employeeDao.findEmployeeById(id);
+    public static void registerEmployee(String employeeId, String password, String name, String department, String position) {
+        Employee existingEmployee = employeeDao.findEmployeeById(employeeId);
         if (existingEmployee == null) {
-            Employee newEmployee = new Employee(id, password, name, department, position);
+            Employee newEmployee = new Employee(employeeId, password, name, department, position);
             employeeDao.addEmployee(newEmployee);
             System.out.println("직원이 성공적으로 등록되었습니다.");
         } else {
@@ -39,21 +39,23 @@ public class EmployeeService {
         }
     }
 
-    public static boolean validateEmployeeCredentials(String username, String password) {
-        Employee employee = employeeDao.findEmployeeById(username);
+    public static boolean validateEmployeeCredentials(String employeeId, String password) {
+        Employee employee = employeeDao.findEmployeeById(employeeId);
         return employee != null && employee.getPassword().equals(password);
     }
 
-    public static Employee getEmployee(String id) {
-        return employeeDao.findEmployeeById(id);
+    public static Employee getEmployee(String employeeId) {
+        return employeeDao.findEmployeeById(employeeId);
     }
 
-    public static void removeEmployee(String id) {
-        if (employeeDao.removeEmployee(id)) {
+    public static boolean removeEmployee(String employeeId) {
+        boolean removed = employeeDao.removeEmployee(employeeId);
+        if (removed) {
             System.out.println("직원이 삭제되었습니다.");
         } else {
             System.out.println("직원을 찾을 수 없습니다.");
         }
+        return removed;
     }
 
     public static List<Employee> getEmployeeList() {

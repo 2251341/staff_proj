@@ -1,7 +1,10 @@
 package org.example.controller;
 
+import org.example.container.Container;
+import org.example.dao.EmployeeDao;
 import org.example.dto.Employee;
 
+import org.example.service.AdminService;
 import org.example.service.EmployeeService;
 import org.example.util.Util;
 
@@ -15,6 +18,7 @@ public class AdminController {
     private static String ADMIN_USERNAME = "admin";
     private static String ADMIN_PASSWORD = "admin";
     private static Set<String> adminUsernames = new HashSet<>();
+    private static AdminService adminService = new AdminService(new EmployeeDao());
 
 
 
@@ -25,7 +29,7 @@ public class AdminController {
     private static void setAdminCredentials(String adminId, String adminPassword) {
         ADMIN_USERNAME = adminId;
         ADMIN_PASSWORD = adminPassword;
-        adminUsernames.add(adminId); // Adding admin username to the set
+        adminUsernames.add(adminId);
     }
 
 
@@ -40,28 +44,51 @@ public class AdminController {
             return EmployeeService.validateEmployeeCredentials(username, password);
         }
     }
+    public static void showAdminPage(String username) {
+        Scanner scanner = new Scanner(System.in);
+        boolean logout = false;
 
+        while (!logout) {
+            System.out.println("관리자 페이지에 오신 것을 환영합니다, " + username + "님!");
+            System.out.println("1. 직원 관리");
+            System.out.println("2. 출퇴근 기록 조회");
+            System.out.println("3. 출퇴근 기록하기");
+            System.out.println("4. 로그아웃");
+            System.out.print("선택: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-
-    // 직원 출석 기록
-    public static void recordEmployeeAttendance(String employeeId, String attendanceType) {
-        String dateTimeKey = Util.getNowDateStr();
-        String recordKey = employeeId + ":" + dateTimeKey;
-
-        if (attendanceRecords != null) {
-            if (attendanceRecords.containsKey(recordKey)) {
-                System.out.println("직원 " + employeeId + "의 출석 기록을 업데이트합니다.");
-                attendanceRecords.put(recordKey, attendanceType);
-            } else {
-                System.out.println("직원 " + employeeId + "의 새로운 출석을 기록합니다.");
-                attendanceRecords.put(recordKey, attendanceType);
+            switch (choice) {
+                case 1:
+                    manageEmployees();
+                    break;
+                case 2:
+                    viewAttendanceRecords(adminService.getAttendanceRecords());
+                    break;
+                case 3:
+                    recordAttendanceProcess(scanner);
+                    break;
+                case 4:
+                    System.out.println("로그아웃합니다.");
+                    logout = true;
+                    break;
+                default:
+                    System.out.println("잘못된 선택입니다. 다시 선택하세요.");
             }
-        } else {
-            System.out.println("출퇴근 기록이 초기화되지 않았습니다.");
         }
     }
 
-
+    private static void recordAttendanceProcess(Scanner scanner) {
+        System.out.println("기록할 직원 ID를 입력하세요:");
+        String employeeId = scanner.nextLine();
+        if (EmployeeService.validateEmployee(employeeId)) {
+            System.out.println("출퇴근 유형을 입력하세요 (예: 출근, 퇴근):");
+            String attendanceType = scanner.nextLine();
+            AdminService.recordEmployeeAttendance(employeeId, attendanceType);
+        } else {
+            System.out.println("유효하지 않은 직원 ID입니다.");
+        }
+    }
 
     public static void manageEmployees() {
         Scanner scanner = new Scanner(System.in);
@@ -99,6 +126,7 @@ public class AdminController {
         } while (true);
     }
 
+
     private static void addEmployee() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("추가할 직원의 ID를 입력하세요: "); // 사용자로부터 직원 ID 입력 받기
@@ -130,7 +158,7 @@ public class AdminController {
     }
 
     private static void modifyEmployeeInfo() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = Container.getScanner();
         System.out.print("수정할 직원의 ID를 입력하세요: ");
         String id = scanner.nextLine();
 
@@ -195,13 +223,13 @@ public class AdminController {
 
         switch (choice) {
             case 1:
-                viewAttendanceByEmployee();
+                AdminService.viewAttendanceByEmployee();
                 break;
             case 2:
-                viewAttendanceByPeriod(EmployeeService.attendanceRecords);
+                AdminService.viewAttendanceByPeriod(EmployeeService.attendanceRecords);
                 break;
             case 3:
-                viewAttendanceByDate(EmployeeService.attendanceRecords);
+                AdminService.viewAttendanceByDate(EmployeeService.attendanceRecords);
                 break;
             case 4:
                 System.out.println("이전 메뉴로 돌아갑니다.");
@@ -211,63 +239,5 @@ public class AdminController {
         }
     }
 
-    private static void viewAttendanceByEmployee() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("출퇴근 기록을 조회할 직원 ID를 입력하세요: ");
-        String employeeId = scanner.nextLine().trim();
 
-        boolean found = false;
-        for (String key : attendanceRecords.keySet()) {
-            if (key.startsWith(employeeId + ":")) { // Ensure to include the colon for precise matching
-                String date = key.split(":")[1];
-                String record = attendanceRecords.get(key).toString();
-                System.out.println(employeeId + " on " + date + " - " + record);
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("해당 직원의 출퇴근 기록이 없습니다.");
-        }
-    }
-
-    private static void viewAttendanceByPeriod(HashMap<String, String> attendanceRecords) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("조회할 기간의 시작일을 입력하세요 (yyyy-MM-dd): ");
-        LocalDate startDate = LocalDate.parse(scanner.nextLine().trim());
-        System.out.print("조회할 기간의 종료일을 입력하세요 (yyyy-MM-dd): ");
-        LocalDate endDate = LocalDate.parse(scanner.nextLine().trim());
-
-        boolean found = false;
-        for (Map.Entry<String, String> entry : attendanceRecords.entrySet()) {
-            String[] parts = entry.getKey().split(":");
-            LocalDate date = LocalDate.parse(parts[1]);
-            if (!date.isBefore(startDate) && !date.isAfter(endDate)) {
-                System.out.println(parts[0] + " on " + parts[1] + " - " + entry.getValue());
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("조회된 기간 동안의 출퇴근 기록이 없습니다.");
-        }
-    }
-
-    private static void viewAttendanceByDate(HashMap<String, String> attendanceRecords) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("조회할 날짜를 입력하세요 (yyyy-MM-dd): ");
-        LocalDate date = LocalDate.parse(scanner.nextLine());
-
-        boolean found = false;
-        for (Map.Entry<String, String> entry : attendanceRecords.entrySet()) {
-            if (entry.getKey().contains(date.toString())) {
-                System.out.println(entry.getKey().replaceFirst(":", " on ") + " - " + entry.getValue());
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("해당 날짜의 출퇴근 기록이 없습니다.");
-        }
-    }
 }
