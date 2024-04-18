@@ -75,7 +75,7 @@ public class EmployeeController {
             System.out.print("조회할 기간의 종료일을 입력하세요 (yyyy-mm-dd): ");
             String endDate = scanner.nextLine();
 
-            List<String> attendanceRecords = employee.getAttendanceRecords();
+            List<String> attendanceRecords = (List<String>) employee.getAttendanceRecords();
             System.out.println("직원 " + username + "의 출퇴근 기록 (기간: " + startDate + " ~ " + endDate + "):");
             for (String record : attendanceRecords) {
                 // 출퇴근 기록 중에서 본인의 것이고 시작일과 종료일 사이에 해당하는 것만 출력
@@ -96,7 +96,7 @@ public class EmployeeController {
             System.out.print("조회하고 싶은 날짜를 입력하세요 (yyyy-mm-dd): ");
             String targetDate = scanner.nextLine();
 
-            List<String> attendanceRecords = employee.getAttendanceRecords();
+            List<String> attendanceRecords = (List<String>) employee.getAttendanceRecords();
             System.out.println("직원 " + username + "의 출퇴근 기록 (날짜: " + targetDate + "):");
             for (String record : attendanceRecords) {
                 // 출퇴근 기록 중에서 본인의 것이고 해당 날짜에 해당하는 것만 출력

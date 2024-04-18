@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 
 @Setter
@@ -26,18 +26,17 @@ public class Employee {
 
 
     private List<String> attendanceRecords; // 출퇴근 기록 저장
-    private List<String> checkInRecords; // Separate list for check-in records
-    private List<String> checkOutRecords; // Separate list for check-out records
+
 
     public Employee(String employeeId, String password, String name, String department, String position) {
+
         this.employeeId = employeeId;
         this.password = password;
         this.name = name;
         this.department = department;
         this.position = position;
-        this.attendanceRecords = new ArrayList<>();
-        this.checkInRecords = new ArrayList<>();
-        this.checkOutRecords = new ArrayList<>();
+
+        attendanceRecords = new ArrayList<>();
     }
 
 

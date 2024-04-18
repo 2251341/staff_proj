@@ -31,19 +31,17 @@ public class EmployeeDao {
                 .findFirst();
     }
 
-    public boolean updateEmployee(String employeeId, String name, String department, String position) {
+    public void updateEmployee(String employeeId, String name, String department, String position) {
         Employee employee = findEmployeeById(employeeId);
         if (employee != null) {
             employee.setName(name);
             employee.setDepartment(department);
             employee.setPosition(position);
-            return true;
         }
-        return false;
     }
 
-    public boolean removeEmployee(String employeeId) {
-        return employees.removeIf(employee -> employee.getEmployeeId().equals(employeeId));
+    public void removeEmployee(String employeeId) {
+        employees.removeIf(employee -> employee.getEmployeeId().equals(employeeId));
     }
 
     public List<Employee> getAllEmployees() {
