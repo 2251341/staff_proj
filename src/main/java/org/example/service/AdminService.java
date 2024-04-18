@@ -16,20 +16,31 @@ public class AdminService {
         if (employee != null) {
 
             String dateTimeKey = Util.getNowDateStr();
-            String record = dateTimeKey + ": " + attendanceType;
-            employee.getAttendanceRecords().add(record);
-            System.out.println("출근 기록이 추가되었습니다: " + employee.getEmployeeId() + " - " + record);
+            employee.getAttendanceRecords().add(dateTimeKey);
+            System.out.println("출근 기록이 추가되었습니다: " + employee.getEmployeeId() + " - " + dateTimeKey);
+
+//            String dateTimeKey = Util.getNowDateStr();
+//            String record = dateTimeKey  +": " + attendanceType;
+//            employee.getAttendanceRecords().add(record);
+//            System.out.println("출근 기록이 추가되었습니다: " + employee.getEmployeeId() + " - " + record);
         } else {
             System.out.println("유효하지 않은 직원 ID입니다.");
         }
+    }
+
+    public static String formatDattime(String dateTimeString) {
+        DateTimeFormatter fomatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime parseDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return parseDateTime.format(fomatter);
     }
 
     public static void viewAttendanceByEmployee(String employeeId) {
         Employee employee = EmployeeService.getEmployee(employeeId);
         if (employee != null && !employee.getAttendanceRecords().isEmpty()) {
             System.out.println(employeeId + "의 출퇴근 기록:");
+
             for (String record : employee.getAttendanceRecords()) {
-                System.out.println(record);
+                System.out.println(formatDattime(record));
             }
         } else {
             System.out.println("해당 직원의 출퇴근 기록이 없습니다.");
@@ -45,7 +56,7 @@ public class AdminService {
         for (Employee employee : employees) {
             for (String record : employee.getAttendanceRecords()) {
                 if (record.startsWith(date.format(formatter))) {
-                    System.out.println(employee.getEmployeeId() + " - " + record);
+                    System.out.println(employee.getEmployeeId() + " - " + formatDattime(record));
                     found = true;
                 }
             }
@@ -69,7 +80,7 @@ public class AdminService {
                 LocalDate recordDate = LocalDate.parse(datePart, formatter);
 
                 if (!recordDate.isBefore(startDate) && !recordDate.isAfter(endDate)) {
-                    System.out.println(employee.getEmployeeId() + " - " + record);
+                    System.out.println(employee.getEmployeeId() + " - " + formatDattime(record));
                     found = true;
                 }
             }
