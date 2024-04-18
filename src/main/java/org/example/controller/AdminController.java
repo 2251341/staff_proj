@@ -79,23 +79,36 @@ public class AdminController {
 
     // 출퇴근 기록 처리
     private static void recordAttendanceProcess(Scanner scanner) {
+
         System.out.println("기록할 직원 ID를 입력하세요:");
         String employeeId = scanner.nextLine();
         Employee employee = EmployeeService.getEmployee(employeeId);
         if (employee != null) {
-            System.out.println("출퇴근 유형을 입력하세요 (예: 출근, 퇴근):");
-            String attendanceType = scanner.nextLine();
-            AdminService.recordEmployeeAttendance(employee, attendanceType);
+            AdminService.recordEmployeeAttendance(employee);
         } else {
             System.out.println("유효하지 않은 직원 ID입니다.");
         }
     }
 
+    // 출퇴근 기록 처리
+//    private static void recordAttendanceProcess(Scanner scanner) {
+//
+//        System.out.println("기록할 직원 ID를 입력하세요:");
+//        String employeeId = scanner.nextLine();
+//        Employee employee = EmployeeService.getEmployee(employeeId);
+//        if (employee != null) {
+//            String attendanceType = scanner.nextLine();
+//            AdminService.recordEmployeeAttendance(employee, attendanceType);
+//        } else {
+//            System.out.println("유효하지 않은 직원 ID입니다.");
+//        }
+//    }
+
     // 직원 관리
     public static void manageEmployees() {
         Scanner scanner = new Scanner(System.in);
         int choice;
-        do {
+        while (true) {
             System.out.println("직원 관리 기능을 선택하세요:");
             System.out.println("1. 직원 추가");
             System.out.println("2. 직원 삭제");
@@ -103,29 +116,36 @@ public class AdminController {
             System.out.println("4. 직원 목록 조회");
             System.out.println("5. 뒤로 가기");
             System.out.print("선택: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // 엔터키 소비
 
-            switch (choice) {
-                case 1:
-                    addEmployee();
-                    break;
-                case 2:
-                    removeEmployee();
-                    break;
-                case 3:
-                    modifyEmployeeInfo();
-                    break;
-                case 4:
-                    listEmployees();
-                    break;
-                case 5:
-                    System.out.println("직원 관리 기능을 종료합니다.");
-                    return;
-                default:
-                    System.out.println("잘못된 선택입니다. 다시 선택하세요.");
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // 엔터키 소비
+
+                switch (choice) {
+                    case 1:
+                        addEmployee();
+                        break;
+                    case 2:
+                        removeEmployee();
+                        break;
+                    case 3:
+                        modifyEmployeeInfo();
+                        break;
+                    case 4:
+                        listEmployees();
+                        break;
+                    case 5:
+                        System.out.println("직원 관리 기능을 종료합니다.");
+                        return;
+                    default:
+                        System.out.println("잘못된 선택입니다. 1부터 5까지의 숫자를 입력하세요.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해야 합니다.");
+                scanner.nextLine(); // 잘못된 입력을 버리고 다음 입력을 위해 준비
+                return;
             }
-        } while (true);
+        }
     }
 
     // 직원 추가

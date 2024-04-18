@@ -12,12 +12,12 @@ import org.example.util.Util;
 public class AdminService {
     private static EmployeeDao employeeDao = new EmployeeDao();
 
-    public static void recordEmployeeAttendance(Employee employee, String attendanceType) {
+    public static void recordEmployeeAttendance(Employee employee) {
         if (employee != null) {
 
             String dateTimeKey = Util.getNowDateStr();
             employee.getAttendanceRecords().add(dateTimeKey);
-            System.out.println("출근 기록이 추가되었습니다: " + employee.getEmployeeId() + " - " + dateTimeKey);
+            System.out.println("출퇴근 기록이 추가되었습니다: \n" + employee.getEmployeeId() + " - " + formatDattime(dateTimeKey));
 
 //            String dateTimeKey = Util.getNowDateStr();
 //            String record = dateTimeKey  +": " + attendanceType;
