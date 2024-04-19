@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.dto.Employee;
 import org.example.dao.EmployeeDao;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,18 +33,37 @@ public class EmployeeService {
         employeeDao.removeEmployee(employeeId);
     }
 
-    public static void updateEmployee(Employee employee) {
-        employeeDao.updateEmployee(employee.getEmployeeId(), employee.getName(), employee.getDepartment(), employee.getPosition());
+    public static boolean updateEmployee(Employee employee) {
+        // 먼저, 해당 직원이 존재하는지 확인
+        if (employeeDao.findEmployeeById(employee.getEmployeeId()) != null) {
+            int result = employeeDao.updateEmployee(employee.getEmployeeId(), employee.getName(), employee.getDepartment(), employee.getPosition());
+            return result > 0;
+        } else {
+            System.out.println("해당 ID의 직원을 찾을 수 없습니다: " + employee.getEmployeeId());
+            return false;
+        }
     }
 
     public static List<Employee> getAllEmployees() {
         return employeeDao.getAllEmployees();
     }
+
     public static boolean validateEmployee(String employeeId) {
         return employeeDao.findEmployeeById(employeeId) != null;
     }
+
+
+
     public static boolean validateEmployeeCredentials(String employeeId, String password) {
         Employee employee = employeeDao.findEmployeeById(employeeId);
         return employee != null && employee.getPassword().equals(password);
+    }
+
+    public static List<String> getEmployeeAttendanceByDate(String employeeId, LocalDate date) {
+        return EmployeeDao.getAttendanceRecordsByDateForEmployee(employeeId, date);
+    }
+
+    public static List<String> getEmployeeAttendanceByPeriod(String employeeId, LocalDate startDate, LocalDate endDate) {
+        return EmployeeDao.getAttendanceRecordsByPeriodForEmployee(employeeId, startDate, endDate);
     }
 }

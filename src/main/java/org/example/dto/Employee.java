@@ -42,9 +42,9 @@ public class Employee {
         super();
         this.employeeId = (String) row.get("ID");
         this.password = (String) row.get("password");
-        this.name = (String) row.get("이름");
-        this.department = (String) row.get("부서");
-        this.position = (String) row.get("직급");
+        this.name = (String) row.get("name");
+        this.department = (String) row.get("department");
+        this.position = (String) row.get("position");
 
     }
     // 각 필드의 getter 메서드들 생략

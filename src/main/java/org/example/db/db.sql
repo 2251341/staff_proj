@@ -3,14 +3,16 @@ CREATE DATABASE emp_proj;
 USE emp_proj;
 
 CREATE TABLE employee (
-	id INT(10) UNSIGNED NOT NULL KEY AUTO_INCREMENT,
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
 	dateTimeKey DATETIME NOT NULL,
 	employeeId CHAR(100) NOT NULL,
 	`password` VARCHAR(100) NOT NULL,
 	`name` CHAR(100) NOT NULL,
 	department CHAR(10) NOT NULL,
-	`position` CHAR(10) NOT NULL
+	`position` CHAR(10) NOT NULL,
+	PRIMARY KEY (id),
+	UNIQUE KEY (employeeId)
 );
 
 INSERT INTO employee
@@ -40,4 +42,17 @@ employeeId = 'user3',
 `department` = '인사',
 `position` = '과장';
 
-SELECT * FROM employee;
+SELECT employeeId AS 'ID',
+`name` AS '이름',
+`department` AS '부서',
+`position` AS '직급'
+FROM employee;
+
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employeeId CHAR(100) NOT NULL,
+    checkIn DATETIME,
+    checkOut DATETIME,
+    FOREIGN KEY (employeeId) REFERENCES employee(employeeId)
+);
+

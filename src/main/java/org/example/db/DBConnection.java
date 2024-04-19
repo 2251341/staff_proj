@@ -128,13 +128,14 @@ public class DBConnection {
         return affectedRows;
     }
 
-    public int update(String sql) {
+    public int update(String sql, Object... params) {
         int affectedRows = 0;
 
-        Statement stmt;
-        try {
-            stmt = connection.createStatement();
-            affectedRows = stmt.executeUpdate(sql);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]); // 파라미터를 1번 인덱스부터 시작하여 바인딩
+            }
+            affectedRows = stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.printf("[SQL 예외, SQL : %s] : %s\n", sql, e.getMessage());
         }
@@ -170,4 +171,13 @@ public class DBConnection {
             }
         }
     }
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        if (this.connection == null) {
+            throw new SQLException("Database connection is not established.");
+        }
+        return this.connection.prepareStatement(sql);
+    }
+
+
+
 }

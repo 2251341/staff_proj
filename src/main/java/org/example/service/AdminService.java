@@ -12,6 +12,8 @@ import org.example.util.Util;
 public class AdminService {
     private static EmployeeDao employeeDao = new EmployeeDao();
 
+
+
     public static void recordEmployeeAttendance(Employee employee) {
         if (employee != null) {
 
@@ -34,59 +36,41 @@ public class AdminService {
         return parseDateTime.format(fomatter);
     }
 
+    // viewAttendanceByEmployee 메서드는 getAttendanceRecordsByEmployee를 호출하여 결과를 출력합니다.
     public static void viewAttendanceByEmployee(String employeeId) {
-        Employee employee = EmployeeService.getEmployee(employeeId);
-        if (employee != null && !employee.getAttendanceRecords().isEmpty()) {
+        List<String> attendanceRecords = employeeDao.getAttendanceRecordsByEmployee(employeeId);
+        if (!attendanceRecords.isEmpty()) {
             System.out.println(employeeId + "의 출퇴근 기록:");
-
-            for (String record : employee.getAttendanceRecords()) {
-                System.out.println(formatDattime(record));
+            for (String record : attendanceRecords) {
+                System.out.println(record);
             }
         } else {
             System.out.println("해당 직원의 출퇴근 기록이 없습니다.");
         }
     }
 
+    // viewAttendanceByDate 메서드는 getAttendanceRecordsByDate를 호출하여 결과를 출력합니다.
     public static void viewAttendanceByDate(LocalDate date) {
-        List<Employee> employees = EmployeeService.getAllEmployees();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println(date.format(formatter) + "의 출퇴근 기록:");
-        boolean found = false;
-
-        for (Employee employee : employees) {
-            for (String record : employee.getAttendanceRecords()) {
-                if (record.startsWith(date.format(formatter))) {
-                    System.out.println(employee.getEmployeeId() + " - " + formatDattime(record));
-                    found = true;
-                }
+        List<String> attendanceRecords = employeeDao.getAttendanceRecordsByDate(date);
+        if (!attendanceRecords.isEmpty()) {
+            System.out.println(date + "의 출퇴근 기록:");
+            for (String record : attendanceRecords) {
+                System.out.println(record);
             }
-        }
-
-        if (!found) {
+        } else {
             System.out.println("해당 날짜의 출퇴근 기록이 없습니다.");
         }
     }
 
+    // viewAttendanceByPeriod 메서드는 getAttendanceRecordsByPeriod를 호출하여 결과를 출력합니다.
     public static void viewAttendanceByPeriod(LocalDate startDate, LocalDate endDate) {
-        List<Employee> employees = EmployeeService.getAllEmployees();
-        System.out.println("기간 " + startDate + "부터 " + endDate + "까지의 출퇴근 기록:");
-        boolean found = false;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        for (Employee employee : employees) {
-            for (String record : employee.getAttendanceRecords()) {
-
-                String datePart = record.split("T")[0];
-                LocalDate recordDate = LocalDate.parse(datePart, formatter);
-
-                if (!recordDate.isBefore(startDate) && !recordDate.isAfter(endDate)) {
-                    System.out.println(employee.getEmployeeId() + " - " + formatDattime(record));
-                    found = true;
-                }
+        List<String> attendanceRecords = employeeDao.getAttendanceRecordsByPeriod(startDate, endDate);
+        if (!attendanceRecords.isEmpty()) {
+            System.out.println("기간 " + startDate + "부터 " + endDate + "까지의 출퇴근 기록:");
+            for (String record : attendanceRecords) {
+                System.out.println(record);
             }
-        }
-
-        if (!found) {
+        } else {
             System.out.println("조회된 기간 동안의 출퇴근 기록이 없습니다.");
         }
     }

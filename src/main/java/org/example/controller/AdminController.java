@@ -8,7 +8,11 @@ import org.example.service.EmployeeService;
 import org.example.util.Util;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+
+import static org.example.container.Container.scanner;
 
 public class AdminController {
     private static String ADMIN_USERNAME = "admin";
@@ -54,41 +58,65 @@ public class AdminController {
             System.out.println("3. 출퇴근 기록하기");
             System.out.println("4. 로그아웃");
             System.out.print("선택: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    manageEmployees();
-                    break;
-                case 2:
-                    viewAttendanceRecords();
-                    break;
-                case 3:
-                    recordAttendanceProcess(scanner);
-                    break;
-                case 4:
-                    System.out.println("로그아웃합니다.");
-                    logout = true;
-                    break;
-                default:
-                    System.out.println("잘못된 선택입니다. 다시 선택하세요.");
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        manageEmployees();
+                        break;
+                    case 2:
+                        viewAttendanceRecords();
+                        break;
+                    case 3:
+                        recordAttendanceProcess(scanner);
+                        break;
+                    case 4:
+                        System.out.println("로그아웃합니다.");
+                        logout = true;
+                        break;
+                    default:
+                        System.out.println("잘못된 선택입니다. 1부터 4까지의 숫자를 입력하세요.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해야 합니다.");
+                scanner.nextLine();
             }
         }
     }
 
+
     // 출퇴근 기록 처리
     private static void recordAttendanceProcess(Scanner scanner) {
-
         System.out.println("기록할 직원 ID를 입력하세요:");
         String employeeId = scanner.nextLine();
         Employee employee = EmployeeService.getEmployee(employeeId);
+
         if (employee != null) {
-            AdminService.recordEmployeeAttendance(employee);
+            if (EmployeeDao.hasCheckedInToday(employeeId)) {
+                // 이미 출근 기록이 있으므로 퇴근 처리를 시도합니다.
+                if (EmployeeDao.recordCheckOut(employeeId)) {
+                    System.out.println("직원 ID: " + employeeId + "의 퇴근 기록이 완료되었습니다.");
+                } else {
+                    System.out.println("퇴근 기록 실패: 이미 퇴근 처리가 되었거나 기록할 수 없습니다.");
+                }
+            } else {
+                // 출근 기록이 없으므로 출근 처리를 시도합니다.
+                if (EmployeeDao.recordCheckIn(employeeId)) {
+                    System.out.println("직원 ID: " + employeeId + "의 출근 기록이 완료되었습니다.");
+                } else {
+                    System.out.println("출근 기록 실패: 이미 출근 처리가 되었거나 기록할 수 없습니다.");
+                }
+            }
         } else {
             System.out.println("유효하지 않은 직원 ID입니다.");
         }
     }
+
+
+
 
     // 출퇴근 기록 처리
 //    private static void recordAttendanceProcess(Scanner scanner) {
@@ -179,14 +207,14 @@ public class AdminController {
     private static void modifyEmployeeInfo() {
         Scanner scanner = Container.getScanner();
         System.out.print("수정할 직원의 ID를 입력하세요: ");
-        String id = scanner.nextLine();
+        String employeeId = scanner.nextLine();
 
-        Employee employee = EmployeeService.getEmployee(id);
+        Employee employee = EmployeeService.getEmployee(employeeId);
         if (employee != null) {
             System.out.println("현재 직원 정보:");
-            System.out.println("이름: " + employee.getName());
-            System.out.println("부서: " + employee.getDepartment());
-            System.out.println("직급: " + employee.getPosition());
+            System.out.println("이름: " + (employee.getName() != null ? employee.getName() : "정보 없음"));
+            System.out.println("부서: " + (employee.getDepartment() != null ? employee.getDepartment() : "정보 없음"));
+            System.out.println("직급: " + (employee.getPosition() != null ? employee.getPosition() : "정보 없음"));
 
             System.out.println("수정할 정보를 입력하세요:");
             System.out.print("이름: ");
@@ -196,15 +224,25 @@ public class AdminController {
             System.out.print("직급: ");
             String position = scanner.nextLine();
 
-            employee.setName(name);
-            employee.setDepartment(department);
-            employee.setPosition(position);
+            if (!name.isEmpty() && !department.isEmpty() && !position.isEmpty()) {
+                employee.setName(name);
+                employee.setDepartment(department);
+                employee.setPosition(position);
 
-            System.out.println("직원 정보가 수정되었습니다.");
+                boolean updated = EmployeeService.updateEmployee(employee);
+                if (updated) {
+                    System.out.println("직원 정보가 성공적으로 수정되었습니다.");
+                } else {
+                    System.out.println("직원 정보 수정 실패.");
+                }
+            } else {
+                System.out.println("입력된 정보가 유효하지 않습니다.");
+            }
         } else {
             System.out.println("해당 ID의 직원을 찾을 수 없습니다.");
         }
     }
+
 
     // 직원 목록 조회
     private static void listEmployees() {
@@ -221,39 +259,52 @@ public class AdminController {
 
     // 출퇴근 기록 조회
     public static void viewAttendanceRecords() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("출퇴근 기록을 조회할 방법을 선택하세요:");
+        System.out.println("조회할 출퇴근 기록의 유형을 선택하세요:");
         System.out.println("1. 직원별 조회");
         System.out.println("2. 날짜별 조회");
         System.out.println("3. 기간별 조회");
-        System.out.println("4. 뒤로 가기");
+        System.out.println("4. 이전 메뉴로 돌아가기");
         System.out.print("선택: ");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // 엔터키 소비
+        scanner.nextLine();  // 남은 줄바꿈 문자 제거
 
-        switch (choice) {
-            case 1:
-                System.out.print("조회할 직원 ID를 입력하세요: ");
-                String employeeId = scanner.nextLine();
-                AdminService.viewAttendanceByEmployee(employeeId);
-                break;
-            case 2:
-                System.out.print("조회할 날짜를 입력하세요 (yyyy-MM-dd): ");
-                LocalDate date = LocalDate.parse(scanner.nextLine());
-                AdminService.viewAttendanceByDate(date);
-                break;
-            case 3:
-                System.out.print("조회할 기간의 시작일을 입력하세요 (yyyy-MM-dd): ");
-                LocalDate startDate = LocalDate.parse(scanner.nextLine());
-                System.out.print("조회할 기간의 종료일을 입력하세요 (yyyy-MM-dd): ");
-                LocalDate endDate = LocalDate.parse(scanner.nextLine());
-                AdminService.viewAttendanceByPeriod(startDate, endDate);
-                break;
-            case 4:
-                System.out.println("이전 메뉴로 돌아갑니다.");
-                break;
-            default:
-                System.out.println("잘못된 선택입니다. 다시 선택하세요.");
+        try {
+            switch (choice) {
+                case 1:
+                    System.out.print("직원 ID를 입력하세요: ");
+                    String employeeId = scanner.nextLine();
+                    AdminService.viewAttendanceByEmployee(employeeId);
+                    break;
+                case 2:
+                    LocalDate date = askForDate("조회할 날짜를 입력하세요 (yyyy-MM-dd): ");
+                    AdminService.viewAttendanceByDate(date);
+                    break;
+                case 3:
+                    LocalDate startDate = askForDate("조회 시작 날짜를 입력하세요 (yyyy-MM-dd): ");
+                    LocalDate endDate = askForDate("조회 종료 날짜를 입력하세요 (yyyy-MM-dd): ");
+                    AdminService.viewAttendanceByPeriod(startDate, endDate);
+                    break;
+                case 4:
+                    System.out.println("이전 메뉴로 돌아갑니다.");
+                    break;
+                default:
+                    System.out.println("잘못된 선택입니다. 1에서 4 사이의 숫자를 입력하세요.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("잘못된 입력입니다. 숫자를 입력해야 합니다.");
+            scanner.next(); // 잘못된 입력 제거
+        }
+    }
+
+    private static LocalDate askForDate(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String dateInput = scanner.nextLine();
+            try {
+                return LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException e) {
+                System.out.println("날짜 형식이 잘못되었습니다. 올바른 형식 (yyyy-MM-dd)을 사용해 주세요.");
+            }
         }
     }
 }
