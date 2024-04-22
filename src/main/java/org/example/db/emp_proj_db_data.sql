@@ -51,14 +51,15 @@ CREATE TABLE `employee` (
   `position` char(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `employeeId` (`employeeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `employee` */
 
 insert  into `employee`(`id`,`regDate`,`dateTimeKey`,`employeeId`,`password`,`name`,`department`,`position`) values 
 (1,'2024-04-19 16:14:57','2024-04-19 16:14:57','user1','user1','홍길동','개발','대리'),
 (2,'2024-04-19 16:14:57','2024-04-19 16:14:57','user2','user2','홍길순','마케팅','대리'),
-(3,'2024-04-19 16:14:57','2024-04-19 16:14:57','user3','user3','홍길두','인사','과장');
+(3,'2024-04-19 16:14:57','2024-04-19 16:14:57','user3','user3','홍길두','인사','과장'),
+(4,'2024-04-19 18:34:56','2024-04-19 18:34:56','aaa111','aaa111','김철수','개발','부장');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
