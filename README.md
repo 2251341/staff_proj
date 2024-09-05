@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/b5d01664-7fa1-4aa4-a3b2-cf52f45f8ac5)
+
 # 프로젝트 명 : 직원 출퇴근 로그 관리 시스템
 
 
@@ -55,7 +57,9 @@
     ⚫ 관리자 특정 권한 사용 시 권한 없음 메시지 출력
 
 [로그인]
+
 ![image](https://github.com/user-attachments/assets/7e3312cc-314c-4fed-a477-8ba65880ef52)
 
 [관리자]
+
 ![image](https://github.com/user-attachments/assets/a0e46302-5bd3-47c0-bbd1-34f0fbd9fe78)
