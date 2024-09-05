@@ -1,5 +1,14 @@
 # 프로젝트 명 : 직원 출퇴근 로그 관리 시스템
 
+
+- 운영 체제
+
+![js](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+
+## language
+
+![js](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+
 ## 목표
 이 프로젝트의 목표는 회사의 직원들이 출퇴근 시간을 효과적으로 관리하고 
 기록할 수 있는 자바 기반의 출퇴근 로그 관리 시스템을 개발하는 것입니다. 이 
