@@ -54,4 +54,8 @@
     ⚫ 본인의 출퇴근 기록 조회 
     ⚫ 관리자 특정 권한 사용 시 권한 없음 메시지 출력
 
+[로그인]
 ![image](https://github.com/user-attachments/assets/7e3312cc-314c-4fed-a477-8ba65880ef52)
+
+[관리자]
+![image](https://github.com/user-attachments/assets/a0e46302-5bd3-47c0-bbd1-34f0fbd9fe78)
