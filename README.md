@@ -73,3 +73,20 @@
 ![image](https://github.com/user-attachments/assets/55f71ea0-a627-4d62-b47c-e1b11e03ee11)
 
 - 직원 추가, 삭제, 정보 수정, 조회가 가능합니다.
+
+[직원 출퇴근 조회]
+
+![image](https://github.com/user-attachments/assets/1b2bd799-d520-4925-b392-7a50dce5fbd7)
+
+- 직원의 기간별 및 날짜별 출퇴근 조회가 가능합니다.
+
+[직원 본인 출퇴근 기록 조회]
+
+![image](https://github.com/user-attachments/assets/3972517c-27b3-4bca-a33a-0855a881334c)
+
+- 직원의 기간별, 날짜별 출퇴근 기록을 조회 할 수 있습니다.
+- 직원 페이지
+  - 내 정보 조회
+  - 기간별 출퇴근 기록 조회
+  - 날짜별 출퇴근 기록 조회
+
