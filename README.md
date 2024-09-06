@@ -60,6 +60,16 @@
 
 ![image](https://github.com/user-attachments/assets/7e3312cc-314c-4fed-a477-8ba65880ef52)
 
+- 로그인은 관리자 및 직원으로 구분하여 로그인 할 수 있습니다.
+
 [관리자]
 
 ![image](https://github.com/user-attachments/assets/a0e46302-5bd3-47c0-bbd1-34f0fbd9fe78)
+
+- 직원 조회, 출퇴근 기록, 출퇴근 기록 조회가 가능합니다.
+
+[직원 관리]
+
+![image](https://github.com/user-attachments/assets/55f71ea0-a627-4d62-b47c-e1b11e03ee11)
+
+- 직원 추가, 삭제, 정보 수정, 조회가 가능합니다.
